@@ -1,3 +1,4 @@
+// src/components/Footer.jsx
 import React from "react";
 
 export const Footer = () => {
@@ -58,3 +59,5 @@ export const Footer = () => {
     </div>
   );
 };
+
+export default Footer; // Default export

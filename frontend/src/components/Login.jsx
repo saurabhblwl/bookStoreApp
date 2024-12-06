@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-// import axios from "axios";
-// import toast from "react-hot-toast";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Login() {
   const {
@@ -12,21 +12,30 @@ function Login() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log("Form Data:", data); // Log the form data to the console
-
     const userInfo = {
       email: data.email,
       password: data.password,
     };
-
-    // You can send this data to your backend here if necessary
-    // Example:
-    // try {
-    //   const response = await axios.post('your-api-endpoint', userInfo);
-    //   console.log(response);
-    // } catch (error) {
-    //   console.error('Login error:', error);
-    // }
+    await axios
+      .post("http://localhost:4001/user/login", userInfo)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data) {
+          toast.success("login successful");
+          setTimeout(() => {
+            document.getElementById("my_modal_3").close();
+            window.location.reload();
+            localStorage.setItem("users", JSON.stringify(res.data.user));
+          }, 1000);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error);
+          toast.error("errror :" + error.response.data.message);
+          setTimeout(() => {}, 2000);
+        }
+      });
   };
 
   return (

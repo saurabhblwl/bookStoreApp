@@ -1,9 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Signup() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
   const {
     register,
     handleSubmit,
@@ -11,12 +16,27 @@ function Signup() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data); // Log form data to console
-
     const userInfo = {
+      fullname: data.fullname,
       email: data.email,
       password: data.password,
     };
+    await axios
+      .post("http://localhost:4001/user/signup", userInfo)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data) {
+          toast.success("signup successful");
+          navigate(from, { replace: true });
+        }
+        localStorage.setItem("users", JSON.stringify(res.data.user));
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error);
+          toast.error("errror :" + error.response.data.message);
+        }
+      });
 
     // Add logic for submitting the user data to the backend here
   };
@@ -43,9 +63,9 @@ function Signup() {
                 type="text"
                 placeholder="Enter your Full Name"
                 className="w-80 px-3 border rounded-md outline-none"
-                {...register("name", { required: "Name is required" })}
+                {...register("fullname", { required: "Name is required" })}
               />
-              {errors.name && (
+              {errors.fullname && (
                 <p className="text-red-500 text-sm">{errors.name.message}</p>
               )}
             </div>
