@@ -1,1 +1,1 @@
-This is a MERN based project. In this i have created a book store app which is based on basic concept of MERN stack and introduced main features like routing security use of databbase etc. I have used mongodb Localhost for storing data also i used postman for fetching data from backend through API.
+
